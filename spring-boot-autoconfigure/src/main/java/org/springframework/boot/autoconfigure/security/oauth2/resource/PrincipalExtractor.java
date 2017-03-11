@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.json;
+package org.springframework.boot.autoconfigure.security.oauth2.resource;
+
+import java.util.Map;
 
 /**
- * Tests for {@link JsonParser}.
+ * Strategy used by {@link UserInfoTokenServices} to extract the principal from the
+ * resource server's response.
  *
- * @author Dave Syer
+ * @author Phillip Webb
+ * @since 1.4.0
  */
-public class JacksonParserTests extends AbstractJsonParserTests {
+public interface PrincipalExtractor {
 
-	@Override
-	protected JsonParser getParser() {
-		return new JacksonJsonParser();
-	}
+	/**
+	 * Extract the principal that should be used for the token.
+	 * @param map the source map
+	 * @return the extracted principal or {@code null}
+	 */
+	Object extractPrincipal(Map<String, Object> map);
 
 }

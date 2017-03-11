@@ -14,22 +14,30 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.test.mock.mockito;
+package org.springframework.boot.autoconfigure.security.oauth2.resource;
 
-import org.springframework.boot.test.mock.mockito.example.ExampleServiceCaller;
-import org.springframework.boot.test.mock.mockito.example.SimpleExampleService;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import java.util.Map;
 
 /**
- * Config for {@link SpyBeanOnTestFieldForExistingBeanIntegrationTests} and
- * {@link SpyBeanOnTestFieldForExistingBeanCacheIntegrationTests}. Extracted to a shared
- * config to trigger caching.
+ * Default implementation of {@link PrincipalExtractor}. Extracts the principal from the
+ * map with well known keys.
  *
  * @author Phillip Webb
+ * @since 1.4.0
  */
-@Configuration
-@Import({ ExampleServiceCaller.class, SimpleExampleService.class })
-public class SpyBeanOnTestFieldForExistingBeanConfig {
+public class FixedPrincipalExtractor implements PrincipalExtractor {
+
+	private static final String[] PRINCIPAL_KEYS = new String[] { "user", "username",
+			"userid", "user_id", "login", "id", "name" };
+
+	@Override
+	public Object extractPrincipal(Map<String, Object> map) {
+		for (String key : PRINCIPAL_KEYS) {
+			if (map.containsKey(key)) {
+				return map.get(key);
+			}
+		}
+		return null;
+	}
 
 }
